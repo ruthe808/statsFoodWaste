@@ -1,0 +1,12 @@
+---
+title: "Food Waste SES Analysis"
+author: "Ruth Enriquez"
+date: "2022-12-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
