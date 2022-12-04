@@ -16,6 +16,7 @@ library(tidyverse)
 library(janitor)
 library(readxl)
 library(dplyr)
+library(ggplot2)
 ```
 
 ```{r}
@@ -48,4 +49,29 @@ foodCensus <- left_join(Census, food, by = "county") |>
   mutate(Average_ExcessFood_2020 = ((Total_ExcessFood_Lowest_2020 + Total_ExcessFood_Highest_2020)/2))
 ```
 
+```{r}
+#seeing if there is a relationship between average household income and average food waste produced
+
+income_waste_plot <- ggplot(data = foodCensus,
+                            aes(x = mean_household_income_dollars, y = Average_ExcessFood_2020)) +
+  geom_point(size = 3) +
+  theme_classic() +
+  ylim(0, 180000) +
+  geom_hline(yintercept = sum(foodCensus$Average_ExcessFood_2020), color = "blue")
+
+income_waste_plot
+  
+```
+
+```{r}
+#seeing what log does
+
+income_waste_plot <- ggplot(data = foodCensus,
+                            aes(x = mean_household_income_dollars, y = log(Average_ExcessFood_2020))) +
+  geom_point(size = 3) +
+  theme_classic() +
+  geom_hline(yintercept = log(sum(foodCensus$Average_ExcessFood_2020)), color = "blue")
+
+income_waste_plot
+```
 
