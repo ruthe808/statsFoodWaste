@@ -1,0 +1,99 @@
+---
+title: "Code Repo"
+author: "Ruth Enriquez"
+date: "2022-12-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+Storing all the used calculations... in case I need to use it later
+
+```{r cars}
+#seeing if there is a relationship between average household income and average food waste produced
+
+# taking_out_outlier <- ggplot(data = foodCensus,
+#                             aes(x = mean_household_income_dollars,
+#                                 y = Average_ExcessFood_2020)) +
+#   geom_point(size = 3) +
+#   theme_classic() +
+#   ylim(0, 180000) +
+#   geom_hline(yintercept = sum(foodCensus$Average_ExcessFood_2020), color = "blue")
+# 
+# taking_out_outlier
+
+#seeing what log does
+
+# log_food<- ggplot(data = foodCensus,
+#                             aes(x = mean_household_income_dollars, y = log(Average_ExcessFood_2020))) +
+#   geom_point(size = 3) +
+#   theme_classic() +
+#   geom_hline(yintercept = log(sum(foodCensus$Average_ExcessFood_2020)), color = "blue")
+# 
+# log_food
+
+
+#seeing if the data is more substantial per capita
+# perCapita_Hospitality_Basic <- ggplot(data = foodCensus,
+#                             aes(x = per_capita_income_dollars,
+#                                 y = Average_Hospitality_ExcessFood_2020)) +
+#   geom_point(size = 3) +
+#   theme_classic() +
+#   geom_hline(yintercept = 0, color = "blue")
+# 
+# perCapita_Hospitality_Basic
+# 
+# 
+# perCapita_Hospitality_outlier <- ggplot(data = foodCensus,
+#                             aes(x = mean_household_income_dollars,
+#                                 y = Average_Hospitality_ExcessFood_2020)) +
+#   geom_point(size = 3) +
+#   theme_classic() +
+#   ylim(0, 180000) +
+#   geom_hline(yintercept = sum(foodCensus$Average_Hospitality_ExcessFood_2020), color = "blue")
+# 
+# perCapita_Hospitality_outlier
+
+# #checking relationship with income and hospitality
+# income_waste_plot_Basic <- ggplot(data = foodCensus,
+#                             aes(x = mean_household_income_dollars,
+#                                 y = Average_Hospitality_ExcessFood_2020)) +
+#   geom_point(size = 3) +
+#   theme_classic() +
+#   geom_hline(yintercept = 0, color = "blue")
+# 
+# income_waste_plot_Basic
+# 
+# #checking relationship with income and hospitality
+# perCapita_Basic <- ggplot(data = foodCensus,
+#                             aes(x = per_capita_income_dollars,
+#                                 y = Average_Hospitality_ExcessFood_2020)) +
+#   geom_point(size = 3) +
+#   theme_classic() +
+#   geom_hline(yintercept = 0, color = "blue")
+# 
+# perCapita_Basic
+
+
+```
+
+
+```{r}
+x_values <- seq(100000, 2000000, length.out = 58)
+
+y_values <- seq(120, 140, length.out = 58)
+
+data.frame(x_values, y_values)
+
+income_waste_plot_Basic <- ggplot(data = data.frame(x_values, y_values),
+                            aes(x = x_values,
+                                y = y_values)) +
+  geom_point()
+
+income_waste_plot_Basic
+```
+
