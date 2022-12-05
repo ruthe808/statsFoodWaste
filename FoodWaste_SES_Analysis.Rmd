@@ -44,7 +44,6 @@ food <- foodRaw |>
   summarise(Mean_Food_Waste_Low = mean(excessfood_tonyear_lowest), Mean_Food_Waste_High = mean(excessfood_tonyear_highest))
 ```
 
-
 ```{r}
 #joining the food and census tables together
 foodCensus <- left_join(Census, food, by = "county") |> 
@@ -53,7 +52,6 @@ foodCensus <- left_join(Census, food, by = "county") |>
          "Mean_Food_Waste_Low",
          "Mean_Food_Waste_High")
 ```
-
 
 ```{r}
 #checking my data distribution
@@ -64,7 +62,6 @@ lowHist <- hist(foodCensus$Mean_Food_Waste_Low)
 highHist <- hist(foodCensus$Mean_Food_Waste_High)
 
 ```
-
 
 ```{r}
 #seeing if there is a relationship between average household income and average food waste produced
@@ -84,9 +81,6 @@ lowWaste
 highWaste
 ```
 
-
-
-
 ```{r}
 
 regLow <-lm(Mean_Food_Waste_Low ~ mean_household_income_dollars, data =foodCensus)
@@ -95,7 +89,6 @@ regHigh <-lm(Mean_Food_Waste_High ~ mean_household_income_dollars, data =foodCen
 summary(regLow)
 summary(regHigh)
 ```
-
 
 ```{r}
 lowWastePlot <- ggplot(data = foodCensus, aes(x = Mean_Food_Waste_Low, y = mean_household_income_dollars)) + 
@@ -116,19 +109,176 @@ highWastePlot
 #loading in county census data
 region <- read_excel(here("data", "countyRegion.xlsx"))
 
-#adding regional data to foodCensus table
-foodRegion<- left_join(foodCensus, region, by = "county") |> 
+#Looking at regional trend for high estimate
+foodRegionHigh<- left_join(foodCensus, region, by = "county") |> 
   group_by(Region) |> 
-  summarise(Mean_Income = mean(mean_household_income_dollars), Mean_Food_Waste_Low = mean(Mean_Food_Waste_Low), Mean_Food_Waste_High = mean(Mean_Food_Waste_High))
+  summarise(Mean_High = mean(Mean_Food_Waste_High),
+            SD_High = sd(Mean_Food_Waste_High))
+
+#Looking at regional trend for low estimate
+# foodRegionHigh<- left_join(foodCensus, region, by = "county") |> 
+#   group_by(Region) |> 
+#   summarise(Mean_Income = mean(mean_household_income_dollars),
+#             Mean_Low = mean(Mean_Food_Waste_Low),
+#             Mean_High = mean(Mean_Food_Waste_High),
+#             SD_Low = sd(Mean_Food_Waste_Low),
+#             SD_High = sd(Mean_Food_Waste_High))
 
 ```
 
 a.  State your null and alternative hypotheses
 
-$$H_{0}: \mu_{northCentralForst} - \mu_{southFrost} = 0$$ $$H_{A}: \mu_{northCentralFrost} - \mu_{southFrost} \neq 0$$
+$$H_{0}: \mu_{northCoastFoodWaste} - \mu_{centralCoastFoodWaste} = 0$$ $$H_{A}: \mu_{northCoastFoodWaste} - \mu_{centralCoastFoodWaste} \neq 0$$
 
+b.  Compute a point b.estimate of your parameter of interest
+
+    ```{r}
+    #Computing point estimate of your parameter of interest
+    #finding the mean inputs for the point estimate calculation
+    muCentral <- (foodRegionHigh$Mean_High[foodRegionHigh$Region=="Central Coast"])
+    muNorth <- (foodRegionHigh$Mean_High[foodRegionHigh$Region=="North Coast"])
+
+
+    #calculating point estimate
+    #does the order matter, it doesn't just keep it consistent and know where in the graph you're looking at data.
+    pointEst = round(as.numeric(muCentral - muNorth) , 3)
+    print(paste0("The poinst estimate is ", pointEst))
+    ```
+
+c.  Compute your standard error and test statistic[\^3]
+
+    ```{r}
+    #Making a plain region df to count
+    foodRegion<- left_join(foodCensus, region, by = "county")
+
+    #calculating standard error
+    #getting the count of each state in a region
+    #0 is still meaninful, but missing is not
+    countCental = foodRegion |> 
+      filter(Region == "Central Coast") |> 
+      count()
+    countNorth = foodRegion |> 
+      filter(Region == "North Coast") |> 
+      count()
+
+
+    #calling out the standard deviation
+    sdCentral <- (foodRegionHigh$SD_High[foodRegionHigh$Region=="Central Coast"])
+    sdNorth <- (foodRegionHigh$SD_High[foodRegionHigh$Region=="North Coast"])
+
+
+    #calculating standard error
+    seFood = round(as.numeric(sqrt(sdCentral^2/countCental + sdNorth^2/countNorth)),3)
+    print(seFrost)
+
+    #calculating test statistic/zscore
+    zScore = round(((pointEst - 0)/seFood),3)
+    print(zScore)
+
+    print(paste0("The stardard error for frost is ", seFrost, ". The test statistic or zscore is ", zScore))
+    ```
+d.  Use `pt()` with 26 degrees of freedom[^4] to compute the *p*-value
+
+    ```{r}
+    #calculating our p-value using pt
+    #degrees of freedom = 26
+    #wanting to look at positive values, use lower.tail = FALSE
+    pval <- pt(zScore, 26, lower.tail = FALSE)
+    print(paste0("The p-value is ", pval)) 
+    ```
+    
+    
+e.  Report whether you reject or fail to reject your null hypothesis at a significance level of $\alpha=0.05$
+
+    ```{r}
+    print(paste0("With the p-value being ", pval, " I would reject the null hypothesis because of p-value is less than our alpha"))
+    ```
+    
+    
 ```{r}
+#Looking at regional trend for high estimate
+foodRegionLow<- left_join(foodCensus, region, by = "county") |> 
+  group_by(Region) |> 
+  summarise(Mean_Low = mean(Mean_Food_Waste_Low),
+            SD_Low = sd(Mean_Food_Waste_Low))
+
+#Looking at regional trend for low estimate
+# foodRegionHigh<- left_join(foodCensus, region, by = "county") |> 
+#   group_by(Region) |> 
+#   summarise(Mean_Income = mean(mean_household_income_dollars),
+#             Mean_Low = mean(Mean_Food_Waste_Low),
+#             Mean_High = mean(Mean_Food_Waste_High),
+#             SD_Low = sd(Mean_Food_Waste_Low),
+#             SD_High = sd(Mean_Food_Waste_High))
 
 ```
 
+a.  State your null and alternative hypotheses
 
+$$H_{0}: \mu_{northCoastFoodWaste} - \mu_{centralCoastFoodWaste} = 0$$ $$H_{A}: \mu_{northCoastFoodWaste} - \mu_{centralCoastFoodWaste} \neq 0$$
+
+b.  Compute a point b.estimate of your parameter of interest
+
+    ```{r}
+    #Computing point estimate of your parameter of interest
+    #finding the mean inputs for the point estimate calculation
+    muCentralL <- (foodRegionLow$Mean_Low[foodRegionLow$Region=="Central Coast"])
+    muNorthL <- (foodRegionLow$Mean_Low[foodRegionLow$Region=="North Coast"])
+
+
+    #calculating point estimate
+    #does the order matter, it doesn't just keep it consistent and know where in the graph you're looking at data.
+    pointEstL = round(as.numeric(muCentralL - muNorthL) , 3)
+    print(paste0("The poinst estimate is ", pointEstL))
+    ```
+
+c.  Compute your standard error and test statistic[\^3]
+
+    ```{r}
+    #Making a plain region df to count
+    foodRegion<- left_join(foodCensus, region, by = "county")
+
+    #calculating standard error
+    #getting the count of each state in a region
+    #0 is still meaninful, but missing is not
+    countCental = foodRegion |> 
+      filter(Region == "Central Coast") |> 
+      count()
+    countNorth = foodRegion |> 
+      filter(Region == "North Coast") |> 
+      count()
+
+    ##CHECK THIS SECTION##
+
+    #calling out the standard deviation
+    sdCentral <- (foodRegionHigh$SD_High[foodRegionHigh$Region=="Central Coast"])
+    sdNorth <- (foodRegionHigh$SD_High[foodRegionHigh$Region=="North Coast"])
+
+
+    #calculating standard error
+    seFood = round(as.numeric(sqrt(sdCentral^2/countCental + sdNorth^2/countNorth)),3)
+    print(seFrost)
+
+    #calculating test statistic/zscore
+    zScore = round(((pointEst - 0)/seFood),3)
+    print(zScore)
+
+    print(paste0("The stardard error for frost is ", seFrost, ". The test statistic or zscore is ", zScore))
+    ```
+d.  Use `pt()` with 26 degrees of freedom[^4] to compute the *p*-value
+
+    ```{r}
+    #calculating our p-value using pt
+    #degrees of freedom = 26
+    #wanting to look at positive values, use lower.tail = FALSE
+    pval <- pt(zScore, 26, lower.tail = FALSE)
+    print(paste0("The p-value is ", pval)) 
+    ```
+    
+    
+e.  Report whether you reject or fail to reject your null hypothesis at a significance level of $\alpha=0.05$
+
+    ```{r}
+    print(paste0("With the p-value being ", pval, " I would reject the null hypothesis because of p-value is less than our alpha"))
+    ```
+    
