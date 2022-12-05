@@ -109,20 +109,11 @@ highWastePlot
 #loading in county census data
 region <- read_excel(here("data", "countyRegion.xlsx"))
 
-#Looking at regional trend for high estimate
+#Looking at regional trend for HIGH estimate
 foodRegionHigh<- left_join(foodCensus, region, by = "county") |> 
   group_by(Region) |> 
   summarise(Mean_High = mean(Mean_Food_Waste_High),
             SD_High = sd(Mean_Food_Waste_High))
-
-#Looking at regional trend for low estimate
-# foodRegionHigh<- left_join(foodCensus, region, by = "county") |> 
-#   group_by(Region) |> 
-#   summarise(Mean_Income = mean(mean_household_income_dollars),
-#             Mean_Low = mean(Mean_Food_Waste_Low),
-#             Mean_High = mean(Mean_Food_Waste_High),
-#             SD_Low = sd(Mean_Food_Waste_Low),
-#             SD_High = sd(Mean_Food_Waste_High))
 
 ```
 
@@ -177,7 +168,8 @@ c.  Compute your standard error and test statistic[\^3]
 
     print(paste0("The stardard error for frost is ", seFrost, ". The test statistic or zscore is ", zScore))
     ```
-d.  Use `pt()` with 26 degrees of freedom[^4] to compute the *p*-value
+
+d.  Use `pt()` with 26 degrees of freedom[\^4] to compute the *p*-value
 
     ```{r}
     #calculating our p-value using pt
@@ -186,30 +178,19 @@ d.  Use `pt()` with 26 degrees of freedom[^4] to compute the *p*-value
     pval <- pt(zScore, 26, lower.tail = FALSE)
     print(paste0("The p-value is ", pval)) 
     ```
-    
-    
+
 e.  Report whether you reject or fail to reject your null hypothesis at a significance level of $\alpha=0.05$
 
     ```{r}
     print(paste0("With the p-value being ", pval, " I would reject the null hypothesis because of p-value is less than our alpha"))
     ```
-    
-    
+
 ```{r}
-#Looking at regional trend for high estimate
+#Looking at regional trend for LOW estimate
 foodRegionLow<- left_join(foodCensus, region, by = "county") |> 
   group_by(Region) |> 
   summarise(Mean_Low = mean(Mean_Food_Waste_Low),
             SD_Low = sd(Mean_Food_Waste_Low))
-
-#Looking at regional trend for low estimate
-# foodRegionHigh<- left_join(foodCensus, region, by = "county") |> 
-#   group_by(Region) |> 
-#   summarise(Mean_Income = mean(mean_household_income_dollars),
-#             Mean_Low = mean(Mean_Food_Waste_Low),
-#             Mean_High = mean(Mean_Food_Waste_High),
-#             SD_Low = sd(Mean_Food_Waste_Low),
-#             SD_High = sd(Mean_Food_Waste_High))
 
 ```
 
@@ -217,7 +198,7 @@ a.  State your null and alternative hypotheses
 
 $$H_{0}: \mu_{northCoastFoodWaste} - \mu_{centralCoastFoodWaste} = 0$$ $$H_{A}: \mu_{northCoastFoodWaste} - \mu_{centralCoastFoodWaste} \neq 0$$
 
-b.  Compute a point b.estimate of your parameter of interest
+b.  Compute a point estimate of your parameter of interest
 
     ```{r}
     #Computing point estimate of your parameter of interest
@@ -235,50 +216,35 @@ b.  Compute a point b.estimate of your parameter of interest
 c.  Compute your standard error and test statistic[\^3]
 
     ```{r}
-    #Making a plain region df to count
-    foodRegion<- left_join(foodCensus, region, by = "county")
-
-    #calculating standard error
-    #getting the count of each state in a region
-    #0 is still meaninful, but missing is not
-    countCental = foodRegion |> 
-      filter(Region == "Central Coast") |> 
-      count()
-    countNorth = foodRegion |> 
-      filter(Region == "North Coast") |> 
-      count()
-
-    ##CHECK THIS SECTION##
 
     #calling out the standard deviation
-    sdCentral <- (foodRegionHigh$SD_High[foodRegionHigh$Region=="Central Coast"])
-    sdNorth <- (foodRegionHigh$SD_High[foodRegionHigh$Region=="North Coast"])
+    sdCentralL <- (foodRegionLow$SD_Low[foodRegionLow$Region=="Central Coast"])
+    sdNorthL <- (foodRegionLow$SD_Low[foodRegionLow$Region=="North Coast"])
 
 
     #calculating standard error
-    seFood = round(as.numeric(sqrt(sdCentral^2/countCental + sdNorth^2/countNorth)),3)
+    seFoodL = round(as.numeric(sqrt(sdCentralL^2/countCental + sdNorthL^2/countNorth)),3)
     print(seFrost)
 
     #calculating test statistic/zscore
-    zScore = round(((pointEst - 0)/seFood),3)
-    print(zScore)
+    zScoreL = round(((pointEstL - 0)/seFoodL),3)
+    print(zScoreL)
 
-    print(paste0("The stardard error for frost is ", seFrost, ". The test statistic or zscore is ", zScore))
+    print(paste0("The stardard error for frost is ", seFoodL, ". The test statistic or zscore is ", zScoreL))
     ```
-d.  Use `pt()` with 26 degrees of freedom[^4] to compute the *p*-value
+
+d.  Use `pt()` with 26 degrees of freedom[\^4] to compute the *p*-value
 
     ```{r}
     #calculating our p-value using pt
     #degrees of freedom = 26
     #wanting to look at positive values, use lower.tail = FALSE
-    pval <- pt(zScore, 26, lower.tail = FALSE)
-    print(paste0("The p-value is ", pval)) 
+    pvalL <- pt(zScoreL, 26, lower.tail = FALSE)
+    print(paste0("The p-value is ", pvalL)) 
     ```
-    
-    
+
 e.  Report whether you reject or fail to reject your null hypothesis at a significance level of $\alpha=0.05$
 
     ```{r}
-    print(paste0("With the p-value being ", pval, " I would reject the null hypothesis because of p-value is less than our alpha"))
+    print(paste0("With the p-value being ", pvalL, " I would reject the null hypothesis because of p-value is less than our alpha"))
     ```
-    
