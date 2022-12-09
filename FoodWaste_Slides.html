@@ -64,6 +64,29 @@ class: center, middle, inverse, title-slide
 
 .center[&lt;img src="img/conclusion.png" width="700" height="500" /&gt;]
 
+---
+
+
+
+```r
+#Doing a t.test to check my work
+t.test(foodRegion$Mean_Food_Waste_Low[foodRegion$Region=="Central Coast"],
+       foodRegion$Mean_Food_Waste_Low[foodRegion$Region=="North Coast"])
+```
+
+```
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  foodRegion$Mean_Food_Waste_Low[foodRegion$Region == "Central Coast"] and foodRegion$Mean_Food_Waste_Low[foodRegion$Region == "North Coast"]
+## t = 0.048982, df = 10.461, p-value = 0.9619
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -1.460890  1.526966
+## sample estimates:
+## mean of x mean of y 
+##  3.897951  3.864914
+```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

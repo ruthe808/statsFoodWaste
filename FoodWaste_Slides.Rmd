@@ -111,3 +111,20 @@ $$H_{0}: \mu_{northCoastHighFoodWaste} - \mu_{centralCoastHighFoodWaste} = 0$$ $
 
 .center[<img src="img/conclusion.png" width="700" height="500" />]
 
+---
+```{r, echo = FALSE}
+#loading in county by region data
+region <- read_excel(here("data", "countyRegion.xlsx"))
+
+
+#Making a region/county data frame with food waste data
+#Use later for getting count to calculate pvalue
+foodRegion<- left_join(foodCensus, region, by = "county")
+
+```
+
+```{r}
+#Doing a t.test to check my work
+t.test(foodRegion$Mean_Food_Waste_Low[foodRegion$Region=="Central Coast"],
+       foodRegion$Mean_Food_Waste_Low[foodRegion$Region=="North Coast"])
+```

@@ -51,13 +51,36 @@ foodCensus <- left_join(Census, food, by = "county") |>
 
 ```{r}
 #checking my data distribution
-incomeHist <- hist(foodCensus$mean_household_income_dollars)
+#incomeHist <- hist(foodCensus$mean_household_income_dollars)
 
-lowHist <- hist(foodCensus$Mean_Food_Waste_Low)
+incomeHist <- ggplot(data = foodCensus)+
+  geom_histogram(aes(x =mean_household_income_dollars), fill = "cyan4")+
+  theme_classic()+
+  labs(title = "Histogram of Mean Household Income in Dollars",
+       x = "Mean Household Income ($)")
+  
+#lowHist <- hist(foodCensus$Mean_Food_Waste_Low)
+lowHist <- ggplot(data = foodCensus)+
+  geom_histogram(aes(x = Mean_Food_Waste_Low), fill = "cyan4")+
+  theme_classic()+
+  labs(title = "Histogram of Mean Food Waste Low Estimate",
+       x = "Mean Food Waste (Tons)")
 
-highHist <- hist(foodCensus$Mean_Food_Waste_High)
+#highHist <- hist(foodCensus$Mean_Food_Waste_High)
+highHist <- ggplot(data = foodCensus)+
+  geom_histogram(aes(x = Mean_Food_Waste_High), fill = "cyan4")+
+  theme_classic()+
+  labs(title = "Histogram of Mean Food Waste High Estimate",
+       x = "Mean Food Waste (Tons)")
+
+incomeHist
+lowHist
+highHist
+
 
 ```
+
+
 
 ```{r}
 #initially checking if there is a relationship between average household income and average food waste produced
@@ -89,15 +112,16 @@ regHigh <-lm(Mean_Food_Waste_High ~ mean_household_income_dollars, data =foodCen
 summary(regLow)
 summary(regHigh)
 ```
-
+$$ \text{food_waste_low}_i = \beta_0 + \beta_1 \text{mean_household_income}_i + \varepsilon_i $$
+$$ \text{food_waste_high}_i = \beta_0 + \beta_1 \text{mean_household_income}_i + \varepsilon_i $$
 ```{r}
 #Plotting linear regression for LOW food waste estimate
 lowWastePlot <- ggplot(data = foodCensus,
-                       aes(x = Mean_Food_Waste_Low,
-                           y = mean_household_income_dollars)) +
-  labs(x = "Food Waste Low Estimate (tons)",
-      y = "Mean Household Income ($)") +
-  geom_point(alpha = 0.1, size = 3) + 
+                       aes(x = mean_household_income_dollars,
+                           y = Mean_Food_Waste_Low)) +
+  labs(x = "Mean Household Income ($)",
+      y = "Food Waste Low Estimate (tons)") +
+  geom_point(alpha = 0.5, size = 3) + 
   geom_smooth(method ='lm', 
               formula = y~x, 
               color ="lightcoral", 
@@ -106,11 +130,11 @@ lowWastePlot <- ggplot(data = foodCensus,
 
 #Plotting linear regression for HIGH food waste estimate
 highWastePlot <- ggplot(data = foodCensus,
-                        aes(x = Mean_Food_Waste_High,
-                            y = mean_household_income_dollars)) +
-  labs(x = "Food Waste Estimate - High (tons)",
-      y = "Mean Household Income ($)") +
-  geom_point(alpha = 0.1, size = 3) + 
+                        aes(x = mean_household_income_dollars,
+                            y = Mean_Food_Waste_High)) +
+  labs(x = "Mean Household Income ($)",
+      y = "Food Waste Estimate - High (tons)") +
+  geom_point(alpha = 0.5, size = 3) + 
   geom_smooth(method ='lm',
               formula = y~x,
               color ="lightcoral",
@@ -130,12 +154,17 @@ region <- read_excel(here("data", "countyRegion.xlsx"))
 #Use later for getting count to calculate pvalue
 foodRegion<- left_join(foodCensus, region, by = "county")
 
+
+regionIncome <- foodRegion |> 
+  group_by(Region) |> 
+  summarise(mean(mean_household_income_dollars))
+
 ```
 
 
 Stating null and alternative hypotheses for low food waste estimate
 
-$$H_{0}: \mu_{northCoastLowFoodWaste} - \mu_{centralCoastLowFoodWaste} = 0$$ $$H_{A}: \mu_{northCoastLowFoodWaste} - \mu_{centralCoastLowFoodWaste} \neq 0$$
+$$H_{0}: \mu_{SoSJ} - \mu_{SfBay} = 0$$ $$H_{A}: \mu_{SoSJ} - \mu_{SfBay} \neq 0$$
 
 ```{r}
 #Looking at regional trend for LOW estimate
@@ -146,45 +175,31 @@ foodRegionLow<- left_join(foodCensus, region, by = "county") |>
 
 #Computing point estimate of your parameter of interest
 #finding the mean inputs for the point estimate calculation
-muCentralL <- (foodRegionLow$Mean_Low[foodRegionLow$Region=="Central Coast"])
-muNorthL <- (foodRegionLow$Mean_Low[foodRegionLow$Region=="North Coast"])
+muSoSjL <- (foodRegionLow$Mean_Low[foodRegionLow$Region=="Southern San Joaquin Valley"])
+muSfBayL <- (foodRegionLow$Mean_Low[foodRegionLow$Region=="San Francisco Bay Area"])
 
 #calculating point estimate
 #does the order matter, it doesn't just keep it consistent and know where in the graph you're looking at data.
-pointEstL = round(as.numeric(muCentralL - muNorthL) , 3)
+pointEstL = round(as.numeric(muSoSjL - muSfBayL) , 3)
 #print(paste0("The poinst estimate is ", pointEstL))
 
 #calculating standard error
 #getting the count of each state in a region
 #0 is still meaninful, but missing is not
-countCental = foodRegion |> 
-  filter(Region == "Central Coast") |> 
+countSoSj = foodRegion |> 
+  filter(Region == "Southern San Joaquin Valley") |> 
   count()
-countNorth = foodRegion |> 
-  filter(Region == "North Coast") |> 
+countSfBay = foodRegion |> 
+  filter(Region == "San Francisco Bay Area") |> 
   count()
 
 #calling out the standard deviation
-sdCentralL <- (foodRegionLow$SD_Low[foodRegionLow$Region=="Central Coast"])
-sdNorthL <- (foodRegionLow$SD_Low[foodRegionLow$Region=="North Coast"])
+sdSoSjL <- (foodRegionLow$SD_Low[foodRegionLow$Region=="Southern San Joaquin Valley"])
+sdSfBayL <- (foodRegionLow$SD_Low[foodRegionLow$Region=="San Francisco Bay Area"])
 
 
 #calculating standard error
-seFoodL = round(as.numeric(sqrt(sdCentralL^2/countCental + sdNorthL^2/countNorth)),3)
-#print(seFrost)
-
-#calculating test statistic/zscore
-zScoreL = round(((pointEstL - 0)/seFoodL),3)
-#print(zScoreL)
-#print(paste0("The stardard error for frost is ", seFoodL, ". The test statistic or zscore is ", zScoreL))
-
-#calling out the standard deviation
-sdCentralL <- (foodRegionLow$SD_Low[foodRegionLow$Region=="Central Coast"])
-sdNorthL <- (foodRegionLow$SD_Low[foodRegionLow$Region=="North Coast"])
-
-
-#calculating standard error
-seFoodL = round(as.numeric(sqrt(sdCentralL^2/countCental + sdNorthL^2/countNorth)),3)
+seFoodL = round(as.numeric(sqrt(sdSoSjL^2/countSoSj + sdSfBayL^2/countSfBay)),3)
 #print(seFrost)
 
 #calculating test statistic/zscore
@@ -201,9 +216,14 @@ print(paste0("With the p-value being ", pvalL, " I would fail to reject the null
 
 ```
 
+```{r}
+#Doing a t.test to check my work
+t.test(foodRegion$Mean_Food_Waste_Low[foodRegion$Region=="Southern San Joaquin Valley"], foodRegion$Mean_Food_Waste_Low[foodRegion$Region=="San Francisco Bay Area"])
+```
+
 Stating null and alternative hypotheses for high food waste estimate
 
-$$H_{0}: \mu_{northCoastHighFoodWaste} - \mu_{centralCoastHighFoodWaste} = 0$$ $$H_{A}: \mu_{northCoastHighFoodWaste} - \mu_{centralCoastHighFoodWaste} \neq 0$$
+$$H_{0}: \mu_{SoSJ} - \mu_{SfBay} = 0$$ $$H_{A}: \mu_{SoSJ} - \mu_{SfBay} \neq 0$$
 
 ```{r}
 #Creating a dataframe at regional level using HIGH food waste estimate
@@ -214,22 +234,22 @@ foodRegionHigh<- left_join(foodCensus, region, by = "county") |>
 
 #Computing point estimate of your parameter of interest
 #finding the mean inputs for the point estimate calculation
-muCentral <- (foodRegionHigh$Mean_High[foodRegionHigh$Region=="Central Coast"])
-muNorth <- (foodRegionHigh$Mean_High[foodRegionHigh$Region=="North Coast"])
+muSoSj <- (foodRegionHigh$Mean_High[foodRegionHigh$Region=="Southern San Joaquin Valley"])
+muSfBay <- (foodRegionHigh$Mean_High[foodRegionHigh$Region=="San Francisco Bay Area"])
 
 
 #calculating point estimate
 #does the order matter? it doesn't just keep it consistent and know where in the graph you're looking at data.
-pointEst = round(as.numeric(muCentral - muNorth) , 3)
+pointEst = round(as.numeric(muSoSj - muSfBay) , 3)
 #print(paste0("The poinst estimate is ", pointEst))
 
 
 #calling out the standard deviation
-sdCentral <- (foodRegionHigh$SD_High[foodRegionHigh$Region=="Central Coast"])
-sdNorth <- (foodRegionHigh$SD_High[foodRegionHigh$Region=="North Coast"])
+sdSoSj <- (foodRegionHigh$SD_High[foodRegionHigh$Region=="Southern San Joaquin Valley"])
+sdSfBay <- (foodRegionHigh$SD_High[foodRegionHigh$Region=="San Francisco Bay Area"])
 
 #calculating standard error
-seFood = round(as.numeric(sqrt(sdCentral^2/countCental + sdNorth^2/countNorth)),3)
+seFood = round(as.numeric(sqrt(sdSoSj^2/countSoSj + sdSfBay^2/countSfBay)),3)
 #print(seFrost)
 
 #calculating test statistic/zscore
@@ -245,5 +265,17 @@ pval <- pt(zScore, 26, lower.tail = FALSE)
 
 print(paste0("With the p-value being ", pval, " I would reject the null hypothesis because of p-value is less than our alpha"))
 ```
+
+```{r}
+#Doing a t.test to check my work
+t.test(x = foodRegion$Mean_Food_Waste_High[foodRegion$Region=="Northern San Joaquin Valley"], y = foodRegion$Mean_Food_Waste_High[foodRegion$Region=="San Francisco Bay Area"])
+```
+
+
+
+
+
+
+
 
 

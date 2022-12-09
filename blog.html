@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ruth Enriquez">
+<meta name="dcterms.date" content="2022-12-05">
+<meta name="description" content="Researching if there is a relationship between the amount of food waste produced and household income">
+
+<title>Food Waste Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="blog_files/libs/clipboard/clipboard.min.js"></script>
+<script src="blog_files/libs/quarto-html/quarto.js"></script>
+<script src="blog_files/libs/quarto-html/popper.min.js"></script>
+<script src="blog_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="blog_files/libs/quarto-html/anchor.min.js"></script>
+<link href="blog_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="blog_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="blog_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="blog_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="blog_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="blog_files/libs/tabwid-1.1.2/tabwid.css" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Food Waste Analysis</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">MEDS</div>
+    <div class="quarto-category">R</div>
+    <div class="quarto-category">Statistics</div>
+    <div class="quarto-category">Food Waste</div>
+    <div class="quarto-category">California</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Researching if there is a relationship between the amount of food waste produced and household income
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ruth Enriquez </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 5, 2022</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<section id="question" class="level2">
+<h2 class="anchored" data-anchor-id="question">Question</h2>
+<p>I wanted to look at the relationship between food waste production and household income, specifically do households with higher income produce more food waste? I wanted to investigate this relationship because 10% of American’s suffer from food insecurity, yet every year we waste 40% of all food. Of the food waste produced in America 31% of it is produced at the wholesale &amp; retail level. I wanted to see if there was an opportunity to divert edible food waste/excess to individuals instead of landfills. I think this is an important topic to investigate because everyone should have access to food. This topic is also important because reducing the amount of food waste in landfills can help reduce the amount of methane produced and help to mitigate climate change. Doing a quick google search, I see there are others wondering about the effects of socioeconomic status on food waste production. There is a research paper, (<a href="https://www.sciencedirect.com/science/article/pii/S0921800921000124#:~:text=More%20specifically%2C%20in%20areas%20where,related%20to%20lower%20food%20waste.">Community social capital and status: The social dilemma of food waste</a>), that look at the negative relationship food waste levels have related to local levels of social capital in Italy. However, I couldn’t find other’s asking a similar question for America. Though there seems to be a growing interest in food waste data and statistics. I think there is still a gap in the data collection of food waste produced in America therefore there isn’t a existing evidence on the question of do households with higher income produce more food waste in America.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>I got my food waste data from the (<a href="https://edg.epa.gov/data/PUBLIC/R9/ExcessFoodPublic_USTer_2020_R9.gdb.zip">Environmental Protection Agency</a>)(EPA) &amp; my household income data from the (<a href="https://data.census.gov/table?q=DP03&amp;t=Earnings+(Individuals):Income+(Households,+Families,+Individuals):Income+and+Earnings&amp;g=0100000US_0400000US06$0500000&amp;y=2020&amp;tid=ACSDP5Y2020.DP03&amp;tp=false">United States Census Bureau</a>). For this project, I decided to shrink my scope &amp; to focus on food waste produced at the wholesale &amp; retail level &amp; household income in California counties.</p>
+<p>I quickly learned that most companies do not rigorously track food waste, so all the numbers I used from the EPA data are estimates. From the data the EPA was able to collect they ran it through an algorithm that produced low and high estimates of food wasted for the year. There was little transparency on how the EPA calculated the low and high food waste estimates. With this limitation, I decided to apply my analysis to both estimates provided to see if there was a relationship.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sjPlot)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rempsyc)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#loading food waste data on wholesale and retail </span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>foodRaw <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"foodWaste"</span>, <span class="st">"Food_Wholesale_Retail.xlsx"</span>), <span class="at">sheet =</span> <span class="st">"Data"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">excessfood_tonyear_lowest =</span> <span class="fu">as.numeric</span>(excessfood_tonyear_lowest), <span class="at">excessfood_tonyear_highest =</span> <span class="fu">as.numeric</span>(excessfood_tonyear_highest)) <span class="sc">|&gt;</span> </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(excessfood_tonyear_lowest) <span class="sc">==</span> <span class="cn">FALSE</span>, <span class="fu">is.na</span>(excessfood_tonyear_highest) <span class="sc">==</span> <span class="cn">FALSE</span>, county <span class="sc">!=</span> <span class="st">"NULL"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#loading in CA county &amp; income census data</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>Census <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"census2020.xlsx"</span>), <span class="at">sheet =</span> <span class="st">"Data2"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>()</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>food <span class="ot">&lt;-</span> foodRaw <span class="sc">|&gt;</span> </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">"county"</span>, <span class="st">"state"</span>, <span class="st">"excessfood_tonyear_lowest"</span>, <span class="st">"excessfood_tonyear_highest"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(state <span class="sc">==</span> <span class="st">"CA"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(county) <span class="sc">|&gt;</span> </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Mean_Food_Waste_Low =</span> <span class="fu">mean</span>(excessfood_tonyear_lowest), <span class="at">Mean_Food_Waste_High =</span> <span class="fu">mean</span>(excessfood_tonyear_highest))</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#joining the food and census tables together</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>foodCensus <span class="ot">&lt;-</span> <span class="fu">left_join</span>(Census, food, <span class="at">by =</span> <span class="st">"county"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">"county"</span>,</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>         <span class="st">"mean_household_income_dollars"</span>,</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Mean_Food_Waste_Low"</span>,</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Mean_Food_Waste_High"</span>)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">#loading in county by region data</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>region <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"countyRegion.xlsx"</span>))</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">#Making a region/county data frame with food waste data</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">#Use later for getting count to calculate pvalue</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>foodRegion<span class="ot">&lt;-</span> <span class="fu">left_join</span>(foodCensus, region, <span class="at">by =</span> <span class="st">"county"</span>)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co">#Looking at regional trend for LOW estimate</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>foodRegionLow<span class="ot">&lt;-</span> <span class="fu">left_join</span>(foodCensus, region, <span class="at">by =</span> <span class="st">"county"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region) <span class="sc">|&gt;</span> </span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Mean_Low =</span> <span class="fu">mean</span>(Mean_Food_Waste_Low),</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>            <span class="at">SD_Low =</span> <span class="fu">sd</span>(Mean_Food_Waste_Low))</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co">#Looking at regional trend for HIGH estimate</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>foodRegionHigh<span class="ot">&lt;-</span> <span class="fu">left_join</span>(foodCensus, region, <span class="at">by =</span> <span class="st">"county"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region) <span class="sc">|&gt;</span> </span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Mean_High =</span> <span class="fu">mean</span>(Mean_Food_Waste_High),</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>            <span class="at">SD_High =</span> <span class="fu">sd</span>(Mean_Food_Waste_High))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exploring-my-data" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-my-data">Exploring my Data</h2>
+<section id="checking-my-data-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="checking-my-data-distribution">Checking my data distribution</h3>
+<p>I decided to look at how my data was distributed by plotting it on a histogram. After some data wrangling this was the best, I could normalize my data.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#checking my data distribution</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#incomeHist &lt;- hist(foodCensus$mean_household_income_dollars)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>incomeHist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> foodCensus)<span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span>mean_household_income_dollars), <span class="at">fill =</span> <span class="st">"cyan4"</span>, <span class="at">bins =</span> <span class="dv">8</span>)<span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Mean Household Income in Dollars"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Mean Household Income ($)"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#lowHist &lt;- hist(foodCensus$Mean_Food_Waste_Low)</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>lowHist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> foodCensus)<span class="sc">+</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> Mean_Food_Waste_Low), <span class="at">fill =</span> <span class="st">"cyan4"</span>, <span class="at">bins =</span> <span class="dv">8</span>)<span class="sc">+</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Mean Food Waste Low Estimate"</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Mean Food Waste (Tons)"</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#highHist &lt;- hist(foodCensus$Mean_Food_Waste_High)</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>highHist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> foodCensus)<span class="sc">+</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> Mean_Food_Waste_High), <span class="at">fill =</span> <span class="st">"cyan4"</span>, <span class="at">bins =</span> <span class="dv">8</span>)<span class="sc">+</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Mean Food Waste High Estimate"</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Mean Food Waste (Tons)"</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>incomeHist</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="blog_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>lowHist</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="blog_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>highHist</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="blog_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="is-this-there-an-obvious-relationship" class="level3">
+<h3 class="anchored" data-anchor-id="is-this-there-an-obvious-relationship">Is this there an obvious relationship?</h3>
+<p>Out of curiosity I also plotted my data in a scatter plot to see if there was an obvious relationship between food waste production and household income. For the low food waste estimate there didn’t seem to be a relationship, while the high food waste estimate seemed to have a positive relationship.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#initially checking if there is a relationship between average household income and average food waste produced</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>lowWaste <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> foodCensus,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">aes</span>(<span class="at">x =</span> mean_household_income_dollars,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">y =</span> Mean_Food_Waste_Low)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Mean Food Waste Low (tons)"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean Household Income ($)"</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>lowWaste</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="blog_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>highWaste <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> foodCensus,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">aes</span>(<span class="at">x =</span> mean_household_income_dollars,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">y =</span> Mean_Food_Waste_High)) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Mean Food Waste High (tons)"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean Household Income ($)"</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>highWaste</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="blog_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="analysis-plan" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-plan">Analysis Plan</h2>
+<p>After exploring my data, I wanted to see if there really a relationship between the food waste was estimates and household incomes. To investigate this relationship further I decided that I wanted to run a linear regression model and do hypothesis testing. Part of the reason why I decided to do these analyses is because of the limitations I had with the data available. With the limited amount of data, I had I wasn’t able to do other analyses.</p>
+</section>
+<section id="running-linear-regressions" class="level2">
+<h2 class="anchored" data-anchor-id="running-linear-regressions">Running Linear Regressions</h2>
+<section id="visualizing-linear-regressions" class="level3">
+<h3 class="anchored" data-anchor-id="visualizing-linear-regressions">Visualizing Linear Regressions</h3>
+<section id="low-food-waste-estimate" class="level4">
+<h4 class="anchored" data-anchor-id="low-food-waste-estimate">Low Food Waste Estimate</h4>
+<p><span class="math display">\[\text{food waste low}_i = \beta_0 + \beta_1 \text{mean household income}_i + \varepsilon_i\]</span></p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Creating a linear regression on LOW food waste estimate</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>regLow <span class="ot">&lt;-</span><span class="fu">lm</span>(Mean_Food_Waste_Low <span class="sc">~</span> mean_household_income_dollars, <span class="at">data =</span>foodCensus)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(regLow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<table style="border-collapse:collapse; border:none;">
+<tbody><tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">Mean Food Waste Low</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Predictors</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">3.54</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.44&nbsp;–&nbsp;4.64</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">mean household income<br>dollars</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.00</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.00&nbsp;–&nbsp;0.00</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.733</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">58</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">R<sup>2</sup> / R<sup>2</sup> adjusted</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.002 / -0.016</td>
+</tr>
+
+</tbody></table>
+
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Plotting linear regression for LOW food waste estimate</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>lowWastePlot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> foodCensus,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">aes</span>(<span class="at">x =</span> mean_household_income_dollars,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">y =</span> Mean_Food_Waste_Low)) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Mean Household Income ($)"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">"Food Waste Low Estimate (tons)"</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span><span class="st">'lm'</span>, </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y<span class="sc">~</span>x, </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">color =</span><span class="st">"lightcoral"</span>, </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">se =</span> F, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>lowWastePlot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="blog_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>When I ran the linear regression for the low food waste estimate, it showed that as household income increased there was a slight decrease in the amount of food waste produced. However, with such a high p-value, the mapped relationship is not significance. I do not have confidence to accept this relationship.</p>
+</section>
+<section id="high-food-waste-estimate" class="level4">
+<h4 class="anchored" data-anchor-id="high-food-waste-estimate">High Food Waste Estimate</h4>
+<p><span class="math display">\[\text{food waste high}_i = \beta_0 + \beta_1 \text{mean household income}_i + \varepsilon_i\]</span></p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Creating a linear regression on HIGH food waste estimate</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>regHigh <span class="ot">&lt;-</span><span class="fu">lm</span>(Mean_Food_Waste_High <span class="sc">~</span> mean_household_income_dollars, <span class="at">data =</span>foodCensus)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(regHigh)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<table style="border-collapse:collapse; border:none;">
+<tbody><tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">Mean Food Waste High</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Predictors</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">122.45</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">118.26&nbsp;–&nbsp;126.63</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">mean household income<br>dollars</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.00</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.00&nbsp;–&nbsp;0.00</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">58</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">R<sup>2</sup> / R<sup>2</sup> adjusted</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.193 / 0.178</td>
+</tr>
+
+</tbody></table>
+
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Plotting linear regression for HIGH food waste estimate</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>highWastePlot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> foodCensus,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">aes</span>(<span class="at">x =</span> mean_household_income_dollars,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">y =</span> Mean_Food_Waste_High)) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Mean Household Income ($)"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">"Food Waste High Estimate (tons)"</span>) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span><span class="st">'lm'</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y<span class="sc">~</span>x,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">color =</span><span class="st">"lightcoral"</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">se =</span> F,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>highWastePlot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="blog_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>When I ran a linear regression on the high food waste estimates, the data said the opposite. As household income increased the increase in production of food waste was more significant for this data. In this model the p-value was much better, and the mapped relationship is significant. I would have more confidence accepting this relationship if both estimates were producing similar results with similar p-values.</p>
+</section>
+</section>
+</section>
+<section id="hypothesis-testing" class="level2">
+<h2 class="anchored" data-anchor-id="hypothesis-testing">Hypothesis Testing</h2>
+<p>I wanted to continue my analysis by doing a t.test. I chose two different regions in California with varying average household incomes. I chose to the Northern San Joaquin Valley region with an average household income of about 75,000 dollars &amp; the San Francisco Bay Area region with an average household income of about 156,000 dollars. I wanted to see how the relationship between the two regions within the two different estimates.</p>
+<section id="low" class="level3">
+<h3 class="anchored" data-anchor-id="low">Low</h3>
+<p><span class="math display">\[H_{0}: \mu_{SoSJ} - \mu_{SfBay} = 0\]</span> <span class="math display">\[H_{A}: \mu_{SoSJ} - \mu_{SfBay} \neq 0\]</span></p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Computing point estimate of your parameter of interest</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#finding the mean inputs for the point estimate calculation</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>muSoSjL <span class="ot">&lt;-</span> (foodRegionLow<span class="sc">$</span>Mean_Low[foodRegionLow<span class="sc">$</span>Region<span class="sc">==</span><span class="st">"Southern San Joaquin Valley"</span>])</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>muSfBayL <span class="ot">&lt;-</span> (foodRegionLow<span class="sc">$</span>Mean_Low[foodRegionLow<span class="sc">$</span>Region<span class="sc">==</span><span class="st">"San Francisco Bay Area"</span>])</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#calculating point estimate</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>pointEstL <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(muSoSjL <span class="sc">-</span> muSfBayL) , <span class="dv">3</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#calculating standard error</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>countSoSj <span class="ot">=</span> foodRegion <span class="sc">|&gt;</span> </span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Region <span class="sc">==</span> <span class="st">"Southern San Joaquin Valley"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>()</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>countSfBay <span class="ot">=</span> foodRegion <span class="sc">|&gt;</span> </span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Region <span class="sc">==</span> <span class="st">"San Francisco Bay Area"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>()</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#calling out the standard deviation</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>sdSoSjL <span class="ot">&lt;-</span> (foodRegionLow<span class="sc">$</span>SD_Low[foodRegionLow<span class="sc">$</span>Region<span class="sc">==</span><span class="st">"Southern San Joaquin Valley"</span>])</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>sdSfBayL <span class="ot">&lt;-</span> (foodRegionLow<span class="sc">$</span>SD_Low[foodRegionLow<span class="sc">$</span>Region<span class="sc">==</span><span class="st">"San Francisco Bay Area"</span>])</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co">#calculating standard error</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>seFoodL <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">sqrt</span>(sdSoSjL<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>countSoSj <span class="sc">+</span> sdSfBayL<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>countSfBay)),<span class="dv">3</span>)</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="co">#calculating test statistic/zscore</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>zScoreL <span class="ot">=</span> <span class="fu">round</span>(((pointEstL <span class="sc">-</span> <span class="dv">0</span>)<span class="sc">/</span>seFoodL),<span class="dv">3</span>)</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="co">#calculating our p-value using pt</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>pvalL <span class="ot">&lt;-</span> <span class="fu">pt</span>(zScoreL, <span class="dv">26</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="co">#Doing a t.test to check my work</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(foodRegion<span class="sc">$</span>Mean_Food_Waste_Low[foodRegion<span class="sc">$</span>Region<span class="sc">==</span><span class="st">"Southern San Joaquin Valley"</span>], foodRegion<span class="sc">$</span>Mean_Food_Waste_Low[foodRegion<span class="sc">$</span>Region<span class="sc">==</span><span class="st">"San Francisco Bay Area"</span>])</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>stats.table <span class="ot">&lt;-</span> <span class="fu">tidy</span>(t1, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="fu">nice_table</span>(stats.table, <span class="at">broom =</span> <span class="st">"t.test"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div class="tabwid"><style>.cl-57ab5978{table-layout:auto;}.cl-5794375c{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-5794377a{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-57943784{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;top:3.6pt;}.cl-579ce172{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 2;background-color:transparent;}.cl-579d0d78{background-color:transparent;vertical-align: middle;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-579d0d8c{background-color:transparent;vertical-align: middle;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table class="cl-57ab5978"><thead><tr style="overflow-wrap:break-word;"><th class="cl-579d0d78"><p class="cl-579ce172"><span class="cl-5794375c">Method</span></p></th><th class="cl-579d0d78"><p class="cl-579ce172"><span class="cl-5794375c">Alternative</span></p></th><th class="cl-579d0d78"><p class="cl-579ce172"><span class="cl-5794375c">Mean 1</span></p></th><th class="cl-579d0d78"><p class="cl-579ce172"><span class="cl-5794375c">Mean 2</span></p></th><th class="cl-579d0d78"><p class="cl-579ce172"><span class="cl-5794377a">M</span><span class="cl-57943784">1</span><span class="cl-5794375c"> - </span><span class="cl-5794377a">M</span><span class="cl-57943784">2</span></p></th><th class="cl-579d0d78"><p class="cl-579ce172"><span class="cl-5794377a">t</span></p></th><th class="cl-579d0d78"><p class="cl-579ce172"><span class="cl-5794377a">df</span></p></th><th class="cl-579d0d78"><p class="cl-579ce172"><span class="cl-5794377a">p</span></p></th><th class="cl-579d0d78"><p class="cl-579ce172"><span class="cl-5794375c">95% CI</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-579d0d8c"><p class="cl-579ce172"><span class="cl-5794375c">Welch Two Sample t-test</span></p></td><td class="cl-579d0d8c"><p class="cl-579ce172"><span class="cl-5794375c">two.sided</span></p></td><td class="cl-579d0d8c"><p class="cl-579ce172"><span class="cl-5794375c">3.73</span></p></td><td class="cl-579d0d8c"><p class="cl-579ce172"><span class="cl-5794375c">3.18</span></p></td><td class="cl-579d0d8c"><p class="cl-579ce172"><span class="cl-5794375c">0.56</span></p></td><td class="cl-579d0d8c"><p class="cl-579ce172"><span class="cl-5794375c">0.96</span></p></td><td class="cl-579d0d8c"><p class="cl-579ce172"><span class="cl-5794375c">9.00</span></p></td><td class="cl-579d0d8c"><p class="cl-579ce172"><span class="cl-5794375c">.361</span></p></td><td class="cl-579d0d8c"><p class="cl-579ce172"><span class="cl-5794375c">[-0.75, 1.87]</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>After running the t.test on the low food waste estimates I observed that there was a slight difference in the means. But with our p-value at 0.361 I would fail to reject the null hypothesis. For the low food waste estimates, I would fail to reject the null hypothesis. And for the high food waste estimates I would reject the null hypothesis.</p>
+</section>
+<section id="high" class="level3">
+<h3 class="anchored" data-anchor-id="high">High</h3>
+<p><span class="math display">\[H_{0}: \mu_{SoSJ} - \mu_{SfBay} = 0\]</span> <span class="math display">\[H_{A}: \mu_{SoSJ} - \mu_{SfBay} \neq 0\]</span></p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Computing point estimate of your parameter of interest</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#finding the mean inputs for the point estimate calculation</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>muSoSj <span class="ot">&lt;-</span> (foodRegionHigh<span class="sc">$</span>Mean_High[foodRegionHigh<span class="sc">$</span>Region<span class="sc">==</span><span class="st">"Southern San Joaquin Valley"</span>])</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>muSfBay <span class="ot">&lt;-</span> (foodRegionHigh<span class="sc">$</span>Mean_High[foodRegionHigh<span class="sc">$</span>Region<span class="sc">==</span><span class="st">"San Francisco Bay Area"</span>])</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#calculating point estimate</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>pointEst <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(muSoSj <span class="sc">-</span> muSfBay) , <span class="dv">3</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#calling out the standard deviation</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>sdSoSj <span class="ot">&lt;-</span> (foodRegionHigh<span class="sc">$</span>SD_High[foodRegionHigh<span class="sc">$</span>Region<span class="sc">==</span><span class="st">"Southern San Joaquin Valley"</span>])</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>sdSfBay <span class="ot">&lt;-</span> (foodRegionHigh<span class="sc">$</span>SD_High[foodRegionHigh<span class="sc">$</span>Region<span class="sc">==</span><span class="st">"San Francisco Bay Area"</span>])</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#calculating standard error</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>seFood <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">sqrt</span>(sdSoSj<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>countSoSj <span class="sc">+</span> sdSfBay<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>countSfBay)),<span class="dv">3</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">#calculating test statistic/zscore</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>zScore <span class="ot">=</span> <span class="fu">round</span>(((pointEst <span class="sc">-</span> <span class="dv">0</span>)<span class="sc">/</span>seFood),<span class="dv">3</span>)</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co">#calculating our p-value using pt</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>pval <span class="ot">&lt;-</span> <span class="fu">pt</span>(zScore, <span class="dv">26</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="co">#Doing a t.test to check my work</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>t2 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(foodRegion<span class="sc">$</span>Mean_Food_Waste_High[foodRegion<span class="sc">$</span>Region<span class="sc">==</span><span class="st">"Southern San Joaquin Valley"</span>], foodRegion<span class="sc">$</span>Mean_Food_Waste_High[foodRegion<span class="sc">$</span>Region<span class="sc">==</span><span class="st">"San Francisco Bay Area"</span>])</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>stats.table <span class="ot">&lt;-</span> <span class="fu">tidy</span>(t2, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="fu">nice_table</span>(stats.table, <span class="at">broom =</span> <span class="st">"t.test"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div class="tabwid"><style>.cl-57f9e368{table-layout:auto;}.cl-57e6e1e6{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-57e6e1fa{font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-57e6e20e{font-family:'Times New Roman';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;top:3.6pt;}.cl-57ee36bc{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 2;background-color:transparent;}.cl-57ee5e08{background-color:transparent;vertical-align: middle;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-57ee5e12{background-color:transparent;vertical-align: middle;border-bottom: 0.5pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table class="cl-57f9e368"><thead><tr style="overflow-wrap:break-word;"><th class="cl-57ee5e08"><p class="cl-57ee36bc"><span class="cl-57e6e1e6">Method</span></p></th><th class="cl-57ee5e08"><p class="cl-57ee36bc"><span class="cl-57e6e1e6">Alternative</span></p></th><th class="cl-57ee5e08"><p class="cl-57ee36bc"><span class="cl-57e6e1e6">Mean 1</span></p></th><th class="cl-57ee5e08"><p class="cl-57ee36bc"><span class="cl-57e6e1e6">Mean 2</span></p></th><th class="cl-57ee5e08"><p class="cl-57ee36bc"><span class="cl-57e6e1fa">M</span><span class="cl-57e6e20e">1</span><span class="cl-57e6e1e6"> - </span><span class="cl-57e6e1fa">M</span><span class="cl-57e6e20e">2</span></p></th><th class="cl-57ee5e08"><p class="cl-57ee36bc"><span class="cl-57e6e1fa">t</span></p></th><th class="cl-57ee5e08"><p class="cl-57ee36bc"><span class="cl-57e6e1fa">df</span></p></th><th class="cl-57ee5e08"><p class="cl-57ee36bc"><span class="cl-57e6e1fa">p</span></p></th><th class="cl-57ee5e08"><p class="cl-57ee36bc"><span class="cl-57e6e1e6">95% CI</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-57ee5e12"><p class="cl-57ee36bc"><span class="cl-57e6e1e6">Welch Two Sample t-test</span></p></td><td class="cl-57ee5e12"><p class="cl-57ee36bc"><span class="cl-57e6e1e6">two.sided</span></p></td><td class="cl-57ee5e12"><p class="cl-57ee36bc"><span class="cl-57e6e1e6">129.15</span></p></td><td class="cl-57ee5e12"><p class="cl-57ee36bc"><span class="cl-57e6e1e6">132.87</span></p></td><td class="cl-57ee5e12"><p class="cl-57ee36bc"><span class="cl-57e6e1e6">-3.72</span></p></td><td class="cl-57ee5e12"><p class="cl-57ee36bc"><span class="cl-57e6e1e6">-2.95</span></p></td><td class="cl-57ee5e12"><p class="cl-57ee36bc"><span class="cl-57e6e1e6">8.69</span></p></td><td class="cl-57ee5e12"><p class="cl-57ee36bc"><span class="cl-57e6e1e6">.017</span></p></td><td class="cl-57ee5e12"><p class="cl-57ee36bc"><span class="cl-57e6e1e6">[-6.59, -0.85]</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>Running the t.test on the high food waste estimates I observed that there was a greater difference in the means, but we had a p-value of 0.015. Once again, the p-value for the high food waste estimate was better than the low p-value.</p>
+</section>
+</section>
+<section id="future-work" class="level2">
+<h2 class="anchored" data-anchor-id="future-work">Future Work</h2>
+<p>Overall, after my analyses I do not think I can confidently answer my question. The first reason why I cannot answer my question is the data itself. The data is based off estimates ran from an algorithm that had no transparency to how they were calculated. Second, the two estimates tell different stories and there isn’t enough information for me to know if the difference in story is due to how each estimate was calculated. The third reason I cannot answer my question is the p-values for the low estimate were not good. If I were to do this over again, I would hope that there would be actual food waste data and not estimates. I think having actual food waste data would help significantly. I think also having data for more than a year would also be helpful. Having more data would show more trends. It would also give me an opportunity to do a time series analysis.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
